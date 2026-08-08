@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abdul Deen Kamara  Cybersecurity &amp; Backend Development</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%232563eb'/%3E%3Cstop offset='100%25' stop-color='%2316a34a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M32 13 L48 19 L48 35 C48 45 41 52 32 55 C23 52 16 45 16 35 L16 19 Z' fill='white' opacity='0.96'/%3E%3Ccircle cx='32' cy='31' r='4.5' fill='url(%23g)'/%3E%3Crect x='29.5' y='31' width='5' height='9' rx='1.5' fill='url(%23g)'/%3E%3C/svg%3E">
+    <meta name="description" content="Securing systems through code — building intelligent, resilient, and secure digital solutions.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav>
+    <a href="#hero" class="nav-logo">Abdul Deen Kamara</a>
+    <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#" id="navSupportBtn" class="nav-cta">Support</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Open menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+    <a href="#about"    onclick="toggleMenu()">About</a>
+    <a href="#skills"   onclick="toggleMenu()">Skills</a>
+    <a href="#projects" onclick="toggleMenu()">Projects</a>
+    <a href="#research" onclick="toggleMenu()">Research</a>
+    <a href="#" id="mobileSupportBtn" onclick="toggleMenu()">Support</a>
+    <a href="#contact"  onclick="toggleMenu()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+        <div class="hero-badge"><span class="status-dot"></span>Available for collaboration</div>
+        <h1 class="hero-name">Abdul Deen<br><span class="accent">Kamara</span></h1>
+        <p class="hero-role">Cybersecurity Developer · CS Student · Backend Engineer</p>
+        <p class="hero-tagline">Securing systems through code — building intelligent, resilient, and secure digital solutions.</p>
+        <div class="hero-btns">
+            <a href="#projects" class="btn-primary">View My Work</a>
+            <a href="#projects" class="btn-secondary">Explore Security Projects</a>
+            <a href="#" id="heroSupportBtn" class="btn-support">Support My Work</a>
+        </div>
+    </div>
+    <div class="hero-photo-wrap">
+        <div class="hero-photo-frame">
+            <img src="images/photo.jpg" alt="Abdul Deen Kamara" class="hero-photo-img">
+            <div class="photo-corner tl"></div>
+            <div class="photo-corner tr"></div>
+            <div class="photo-corner bl"></div>
+            <div class="photo-corner br"></div>
+        </div>
+        <div class="hero-stats-col">
+            <div class="stat">
+                <div class="stat-num" id="statProjects">0+</div>
+                <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">3+</div>
+                <div class="stat-label">Languages</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">100%</div>
+                <div class="stat-label">Committed</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TERMINAL STRIP -->
+<div class="terminal-strip">
+    <div class="terminal-strip-inner">
+        $ java -jar portfolio.jar<span>█</span> &nbsp;&nbsp; SECURE_MODE=ON<span>·</span> &nbsp;&nbsp; Spring Boot + Firestore<span>·</span> &nbsp;&nbsp; VALIDATION=ENABLED<span>·</span> &nbsp;&nbsp; Input validation active<span>·</span> &nbsp;&nbsp; Firewall rules loaded<span>·</span> &nbsp;&nbsp; $ java -jar portfolio.jar<span>█</span> &nbsp;&nbsp; SECURE_MODE=ON<span>·</span> &nbsp;&nbsp; Spring Boot + Firestore<span>·</span> &nbsp;&nbsp; VALIDATION=ENABLED<span>·</span> &nbsp;&nbsp; Input validation active<span>·</span> &nbsp;&nbsp; Firewall rules loaded<span>·</span>
+    </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+    <div class="section-label">01 // About</div>
+    <div class="about-grid">
+        <div class="about-text reveal">
+            <h2 class="section-title">Building Secure<br>Systems by Design</h2>
+            <p>I'm <strong>Abdul Deen Kamara</strong>, a <strong>Computer Science student</strong> specializing in Cybersecurity and Backend Development. My work sits at the intersection of software engineering and system protection — writing code that doesn't just function, but actively resists attack.</p>
+            <p>From <strong>system-level scripting</strong> to full-stack applications backed by Firebase Firestore, I approach every project with a security-first mindset. Vulnerabilities emerge from poor architecture, weak assumptions, and neglected edge cases.</p>
+            <p>My focus extends to <strong>hardware-interacting programs</strong>, where software meets physical systems — an area where security failures have real-world consequences.</p>
+            <div class="about-statement">
+                <p>"Security is not a feature to be added — it's a discipline to be practiced from line one. I build systems designed to fail gracefully, resist enumeration, and expose nothing they shouldn't."</p>
+            </div>
+        </div>
+        <div class="focus-areas reveal">
+            <div class="focus-card"><div class="focus-icon">🛡️</div><div class="focus-title">Secure Backend Development</div><div class="focus-desc">Building APIs that enforce authentication, validate every input, and implement least-privilege data access from the ground up.</div></div>
+            <div class="focus-card"><div class="focus-icon">⚙️</div><div class="focus-title">System-Level Scripting</div><div class="focus-desc">Scripts that interact with OS-level processes, automate security audits, and monitor system integrity.</div></div>
+            <div class="focus-card"><div class="focus-icon">🔌</div><div class="focus-title">Hardware-Interacting Programs</div><div class="focus-desc">Software bridging the hardware-software boundary with acute awareness of attack surfaces.</div></div>
+            <div class="focus-card"><div class="focus-icon">🗄️</div><div class="focus-title">Database Architecture</div><div class="focus-desc">Designing cloud-backed Firestore data structures with secure access controls, validation, and audit-friendly records.</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+    <div class="section-label">02 // Skills &amp; Technologies</div>
+    <h2 class="section-title reveal">Technical Arsenal</h2>
+    <p class="section-sub reveal">Tools, languages, and frameworks I use to design, build, and harden systems.</p>
+    <div class="skills-grid" id="skillsGrid">
+        <!-- JS injects skill groups here -->
+    </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+    <div class="section-label">03 // Projects</div>
+    <h2 class="section-title reveal">What I've Built</h2>
+    <p class="section-sub reveal">Security tools, backend systems, and database projects — each built with security as the primary design constraint.</p>
+    <div class="projects-filter reveal">
+        <button class="filter-btn active" onclick="filterProjects('all',this)">All</button>
+        <button class="filter-btn" onclick="filterProjects('cyber',this)">Cybersecurity</button>
+        <button class="filter-btn" onclick="filterProjects('backend',this)">Backend</button>
+        <button class="filter-btn" onclick="filterProjects('db',this)">Database</button>
+    </div>
+    <div class="projects-grid" id="projectsGrid">
+        <!-- JS injects project cards here -->
+    </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+    <div class="section-label">04 // Research &amp; Learning</div>
+    <h2 class="section-title reveal">Ongoing Study</h2>
+    <p class="section-sub reveal">Cybersecurity is a moving target. Here's what I'm actively studying and building knowledge around.</p>
+    <div class="research-grid" id="researchGrid">
+        <!-- JS injects research cards here -->
+    </div>
+    <div class="mindset-block reveal">
+        <div class="mindset-icon">🧠</div>
+        <div class="mindset-text">
+            <h3>The Continuous Learning Mindset</h3>
+            <p>In cybersecurity, yesterday's knowledge is today's liability. I treat learning as infrastructure — building it deliberately, testing it constantly, and never assuming it's complete.</p>
+        </div>
+    </div>
+</section>
+
+<!-- SUPPORT -->
+<section id="support">
+    <div class="support-inner">
+        <div class="section-label">05 // Support</div>
+        <h2 class="section-title reveal">Support My Work</h2>
+        <p class="section-sub reveal">If my projects or research have been useful — your support goes toward tools, learning resources, and hardware for security research.</p>
+        <div class="support-card reveal">
+            <div class="support-amount">$ contribute &nbsp;·&nbsp; any amount</div>
+            <p style="font-size:0.88rem;color:var(--text2);margin-bottom:1.8rem;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.7;">Every contribution supports open-source security tooling and continued research into system protection techniques.</p>
+            <a href="#" id="supportCardBtn" class="btn-support" style="padding:16px 40px;font-size:0.8rem;">
+                ☕ &nbsp; Support My Work
+            </a>
+            <p style="margin-top:1.2rem;font-family:var(--mono);font-size:0.62rem;color:var(--text3);">
+                🔒 Secure redirect &nbsp;·&nbsp; Payment processed externally &nbsp;·&nbsp; No card data stored
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+    <div class="section-label">06 // Contact</div>
+    <div class="contact-grid">
+        <div class="reveal">
+            <h2 class="section-title">Get In Touch</h2>
+            <p style="color:var(--text2);font-size:0.92rem;margin-bottom:0.5rem;max-width:360px;line-height:1.7;">Whether it's a collaboration, a security question, or a conversation about backend architecture — I'm reachable.</p>
+            <div class="contact-links">
+                <a href="abduldeenkamara06@gmail.com" class="contact-link">
+                    <span class="contact-link-icon">📧</span>
+                    <div><div class="contact-link-label">Email</div><div class="contact-link-text">abduldeenkamara06@gmail.com</div></div>
+                </a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=abduldeenkamara06@gmail.com" target="_blank" rel="noopener" class="contact-link">
+                    <span class="contact-link-icon">📧</span>
+                    <div><div class="contact-link-label">Email</div><div class="contact-link-text">abduldeenkamara06@gmail.com</div></div>
+                </a>
+                <a href="https://www.linkedin.com/in/abdul-deen-kamara-982453399" target="_blank" rel="noopener" class="contact-link">
+                    <span class="contact-link-icon">💼</span>
+                    <div><div class="contact-link-label">LinkedIn</div><div class="contact-link-text">https://www.linkedin.com/in/abdul-deen-kamara</div></div>
+                </a>
+                <!--
+                <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener" class="contact-link">
+                    <span class="contact-link-icon">🐦</span>
+                    <div><div class="contact-link-label">Twitter / X</div><div class="contact-link-text">@yourhandle</div></div>
+                </a>
+                -->
+            </div>
+        </div>
+        <div class="reveal">
+            <h3 style="font-family:var(--display);font-size:1rem;font-weight:700;color:var(--white);margin-bottom:1.5rem;">Send a Message</h3>
+            <form class="contact-form" id="contactForm">
+                <div class="form-field">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" placeholder="Your full name" required autocomplete="name">
+                    <div class="form-error" id="err-name"></div>
+                </div>
+                <div class="form-field">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="your@email.com" required autocomplete="email">
+                    <div class="form-error" id="err-email"></div>
+                </div>
+                <div class="form-field">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" placeholder="Collaboration / Question / Other">
+                    <div class="form-error" id="err-subject"></div>
+                </div>
+                <div class="form-field">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" placeholder="What's on your mind?" required></textarea>
+                    <div class="form-error" id="err-message"></div>
+                </div>
+                <div class="form-notice">Input validated server-side.</div>
+                <button type="submit" class="btn-primary" id="submitBtn" style="width:100%;text-align:center;">Send Message</button>
+                <div id="form-feedback" style="font-family:var(--mono);font-size:0.72rem;display:none;text-align:center;margin-top:0.5rem;"></div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-copy">© 2026 <span>Abdul Deen Kamara</span> &nbsp;·&nbsp; Built with purpose, secured by design</div>
+    <div class="footer-stack">Stack: Java &nbsp;·&nbsp; Spring Boot &nbsp;·&nbsp; Firebase Firestore &nbsp;·&nbsp; Vanilla JS</div>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>
