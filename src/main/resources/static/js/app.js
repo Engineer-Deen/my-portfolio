@@ -1,3 +1,5 @@
+const API_BASE_URL = 'https://portfolio-backend-0zx0.onrender.com';
+
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
     loadSkills();
@@ -14,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadProjects() {
     const grid = document.getElementById('projectsGrid');
     try {
-        const res = await fetch('/api/projects');
+        const res = await fetch(`${API_BASE_URL}/api/projects`);
         const projects = await res.json();
 
         document.getElementById('statProjects').textContent = projects.length + '+';
@@ -35,7 +37,6 @@ async function loadProjects() {
       </div>
     `).join('');
 
-        // Newly injected .reveal elements need to be observed
         observeRevealEls();
     } catch (err) {
         console.error('Failed to load projects', err);
@@ -53,15 +54,11 @@ function filterProjects(cat, btn) {
 
 /* ───────────────────────────────────────────────────────────
    SKILLS
-   Note: the backend's `isAccent` boolean field is serialized
-   by Jackson as `accent` (Java strips the "is" prefix on boolean
-   getters when converting to JSON) — so we read skill.accent, not
-   skill.isAccent.
 ─────────────────────────────────────────────────────────── */
 async function loadSkills() {
     const grid = document.getElementById('skillsGrid');
     try {
-        const res = await fetch('/api/skills');
+        const res = await fetch(`${API_BASE_URL}/api/skills`);
         const groups = await res.json();
 
         grid.innerHTML = groups.map(group => `
@@ -83,13 +80,11 @@ async function loadSkills() {
 
 /* ───────────────────────────────────────────────────────────
    RESEARCH
-   Same "is" -> stripped rule applies: isActive -> active,
-   and the computed getClampedProgress() -> clampedProgress.
 ─────────────────────────────────────────────────────────── */
 async function loadResearch() {
     const grid = document.getElementById('researchGrid');
     try {
-        const res = await fetch('/api/research');
+        const res = await fetch(`${API_BASE_URL}/api/research`);
         const topics = await res.json();
 
         grid.innerHTML = topics.map((topic, i) => `
@@ -110,8 +105,6 @@ async function loadResearch() {
 
 /* ───────────────────────────────────────────────────────────
    SUPPORT REDIRECT
-   Backend returns { url: "..." } instead of doing a server-side
-   redirect (since this is now a JSON API, not a Django view).
 ─────────────────────────────────────────────────────────── */
 function wireSupportButtons() {
     const ids = ['navSupportBtn', 'mobileSupportBtn', 'heroSupportBtn', 'supportCardBtn'];
@@ -121,7 +114,7 @@ function wireSupportButtons() {
         btn.addEventListener('click', async (e) => {
             e.preventDefault();
             try {
-                const res = await fetch('/api/support/redirect');
+                const res = await fetch(`${API_BASE_URL}/api/support/redirect`);
                 const data = await res.json();
                 if (data.url && data.url !== '#') {
                     window.location.href = data.url;
@@ -135,10 +128,6 @@ function wireSupportButtons() {
 
 /* ───────────────────────────────────────────────────────────
    CONTACT FORM
-   No CSRF token needed (Spring Boot REST controllers aren't
-   CSRF-protected unless Spring Security is added). We send
-   JSON now instead of form-urlencoded, matching the
-   @RequestBody ContactMessage on the backend.
 ─────────────────────────────────────────────────────────── */
 function wireContactForm() {
     const form = document.getElementById('contactForm');
@@ -164,7 +153,7 @@ function wireContactForm() {
         };
 
         try {
-            const res = await fetch('/api/contact', {
+            const res = await fetch(`${API_BASE_URL}/api/contact`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -205,10 +194,6 @@ function toggleMenu() {
 
 /* ───────────────────────────────────────────────────────────
    SCROLL REVEAL
-   Content now loads asynchronously, so instead of observing
-   .reveal elements once on page load (like the old inline
-   script did), we re-run this after each fetch injects new
-   .reveal elements into the DOM.
 ─────────────────────────────────────────────────────────── */
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
@@ -224,7 +209,7 @@ function observeRevealEls() {
 }
 
 function wireScrollReveal() {
-    observeRevealEls(); // catches the static (non-fetched) .reveal elements already in index.html
+    observeRevealEls();
 }
 
 /* ───────────────────────────────────────────────────────────
@@ -246,10 +231,6 @@ function wireActiveNavHighlight() {
 
 /* ───────────────────────────────────────────────────────────
    UTILITY — basic XSS-safe text insertion
-   Your Django templates auto-escaped {{ variables }}; since
-   we're building HTML strings by hand now, we need to escape
-   any Firestore text before injecting it, so a project
-   description containing "<script>" can't execute.
 ─────────────────────────────────────────────────────────── */
 function escapeHtml(str) {
     if (str == null) return '';
