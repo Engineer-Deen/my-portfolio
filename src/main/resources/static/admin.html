@@ -57,6 +57,42 @@
         </form>
         <p id="projectStatus" class="status-text"></p>
     </section>
+
+    <section class="panel">
+        <h2>Skills</h2>
+
+        <div id="skillGroupsList" class="items-list"></div>
+
+        <h3>Add New Skill Group</h3>
+        <form id="skillGroupForm" class="admin-form">
+            <input type="hidden" id="skillGroupId">
+            <input type="text" id="skillGroupName" placeholder="Group Name (e.g. Programming Languages)" required>
+            <input type="number" id="skillGroupOrder" placeholder="Order" value="1">
+            <textarea id="skillGroupSkills" placeholder="One skill per line. Add |accent to highlight it, e.g.&#10;Python|accent&#10;Java&#10;Bash / Shell" required></textarea>
+            <button type="submit" id="skillGroupSubmitBtn">Add Skill Group</button>
+            <button type="button" id="skillGroupCancelBtn" class="btn-secondary hidden">Cancel Edit</button>
+        </form>
+        <p id="skillGroupStatus" class="status-text"></p>
+    </section>
+
+    <section class="panel">
+        <h2>Research Topics</h2>
+
+        <div id="researchList" class="items-list"></div>
+
+        <h3>Add New Research Topic</h3>
+        <form id="researchForm" class="admin-form">
+            <input type="hidden" id="researchId">
+            <input type="text" id="researchTitle" placeholder="Title" required>
+            <textarea id="researchDescription" placeholder="Description" required></textarea>
+            <input type="number" id="researchProgress" placeholder="Progress (0-100)" min="0" max="100" value="0" required>
+            <input type="text" id="researchStatusLabel" placeholder="Status Label (e.g. In Progress)" required>
+            <input type="number" id="researchOrder" placeholder="Order" value="1">
+            <button type="submit" id="researchSubmitBtn">Add Research Topic</button>
+            <button type="button" id="researchCancelBtn" class="btn-secondary hidden">Cancel Edit</button>
+        </form>
+        <p id="researchStatus" class="status-text"></p>
+    </section>
 </div>
 
 <script src="js/admin.js"></script>

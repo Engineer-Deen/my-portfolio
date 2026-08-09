@@ -2,9 +2,7 @@ package com.myportfolio.portfolio.controller;
 
 import com.myportfolio.portfolio.model.SkillGroup;
 import com.myportfolio.portfolio.service.SkillGroupService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -22,5 +20,23 @@ public class SkillController {
     @GetMapping
     public List<SkillGroup> getSkillGroups() throws ExecutionException, InterruptedException {
         return skillGroupService.fetchAllGroups();
+    }
+
+    @PostMapping
+    public SkillGroup createGroup(@RequestBody SkillGroup group)
+            throws ExecutionException, InterruptedException {
+        return skillGroupService.createGroup(group);
+    }
+
+    @PutMapping("/{id}")
+    public void updateGroup(@PathVariable String id, @RequestBody SkillGroup group)
+            throws ExecutionException, InterruptedException {
+        skillGroupService.updateGroup(id, group);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteGroup(@PathVariable String id)
+            throws ExecutionException, InterruptedException {
+        skillGroupService.deleteGroup(id);
     }
 }

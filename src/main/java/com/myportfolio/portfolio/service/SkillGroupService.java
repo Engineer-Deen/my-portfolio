@@ -1,6 +1,7 @@
 package com.myportfolio.portfolio.service;
 
 import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -29,5 +30,20 @@ public class SkillGroupService {
         return docs.stream()
                 .map(doc -> doc.toObject(SkillGroup.class))
                 .toList();
+    }
+
+    public SkillGroup createGroup(SkillGroup group) throws ExecutionException, InterruptedException {
+        ApiFuture<DocumentReference> future = firestore.collection("skill_groups").add(group);
+        String newId = future.get().getId();
+        group.setId(newId);
+        return group;
+    }
+
+    public void updateGroup(String id, SkillGroup group) throws ExecutionException, InterruptedException {
+        firestore.collection("skill_groups").document(id).set(group).get();
+    }
+
+    public void deleteGroup(String id) throws ExecutionException, InterruptedException {
+        firestore.collection("skill_groups").document(id).delete().get();
     }
 }
