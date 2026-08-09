@@ -8,11 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     wireContactForm();
     wireScrollReveal();
     wireActiveNavHighlight();
+    setFooterYear();
 });
 
-/* ───────────────────────────────────────────────────────────
-   PROJECTS
-─────────────────────────────────────────────────────────── */
 async function loadProjects() {
     const grid = document.getElementById('projectsGrid');
     try {
@@ -52,9 +50,6 @@ function filterProjects(cat, btn) {
     });
 }
 
-/* ───────────────────────────────────────────────────────────
-   SKILLS
-─────────────────────────────────────────────────────────── */
 async function loadSkills() {
     const grid = document.getElementById('skillsGrid');
     try {
@@ -78,9 +73,6 @@ async function loadSkills() {
     }
 }
 
-/* ───────────────────────────────────────────────────────────
-   RESEARCH
-─────────────────────────────────────────────────────────── */
 async function loadResearch() {
     const grid = document.getElementById('researchGrid');
     try {
@@ -103,9 +95,6 @@ async function loadResearch() {
     }
 }
 
-/* ───────────────────────────────────────────────────────────
-   SUPPORT REDIRECT
-─────────────────────────────────────────────────────────── */
 function wireSupportButtons() {
     const ids = ['navSupportBtn', 'mobileSupportBtn', 'heroSupportBtn', 'supportCardBtn'];
     ids.forEach(id => {
@@ -126,9 +115,6 @@ function wireSupportButtons() {
     });
 }
 
-/* ───────────────────────────────────────────────────────────
-   CONTACT FORM
-─────────────────────────────────────────────────────────── */
 function wireContactForm() {
     const form = document.getElementById('contactForm');
     const btn = document.getElementById('submitBtn');
@@ -185,16 +171,14 @@ function wireContactForm() {
     });
 }
 
-/* ───────────────────────────────────────────────────────────
-   MOBILE MENU
-─────────────────────────────────────────────────────────── */
 function toggleMenu() {
     document.getElementById('mobileMenu').classList.toggle('open');
 }
 
-/* ───────────────────────────────────────────────────────────
-   SCROLL REVEAL
-─────────────────────────────────────────────────────────── */
+function setFooterYear() {
+    document.getElementById('footerYear').textContent = new Date().getFullYear();
+}
+
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
@@ -212,9 +196,6 @@ function wireScrollReveal() {
     observeRevealEls();
 }
 
-/* ───────────────────────────────────────────────────────────
-   ACTIVE NAV HIGHLIGHT
-─────────────────────────────────────────────────────────── */
 function wireActiveNavHighlight() {
     const secs = document.querySelectorAll('section[id]');
     const links = document.querySelectorAll('.nav-links a');
@@ -229,9 +210,6 @@ function wireActiveNavHighlight() {
     });
 }
 
-/* ───────────────────────────────────────────────────────────
-   UTILITY — basic XSS-safe text insertion
-─────────────────────────────────────────────────────────── */
 function escapeHtml(str) {
     if (str == null) return '';
     const div = document.createElement('div');
