@@ -2,6 +2,7 @@ const API_BASE_URL = 'https://portfolio-backend-0zx0.onrender.com';
 
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
+    loadHeroPhoto();
     loadSkills();
     loadResearch();
     wireSupportButtons();
@@ -94,6 +95,13 @@ async function loadResearch() {
         console.error('Failed to load research topics', err);
     }
 }
+//To Fetch our image from the Database
+
+function loadHeroPhoto(){ const img = document.getElementById
+('heroPhoto'); const testImg = new Image(); testImg.onload = () =>
+{ img.src = `${API_BASE_URL}/api/settings/photo`; }; testImg.onerror = () =>
+{ /* keep the default static images/photo.jpg */ }; testImg.src = `${API_BASE_URL}/api/settings/photo`; }
+
 
 function wireSupportButtons() {
     const ids = ['navSupportBtn', 'mobileSupportBtn', 'heroSupportBtn', 'supportCardBtn'];
@@ -216,3 +224,4 @@ function escapeHtml(str) {
     div.textContent = str;
     return div.innerHTML;
 }
+

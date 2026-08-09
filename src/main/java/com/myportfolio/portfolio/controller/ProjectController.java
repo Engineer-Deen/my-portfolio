@@ -30,4 +30,22 @@ public class ProjectController {
         }
         return projects;
     }
+
+    @PostMapping
+    public Project createProject(@RequestBody Project project)
+            throws ExecutionException, InterruptedException {
+        return projectService.createProject(project);
+    }
+
+    @PutMapping("/{id}")
+    public void updateProject(@PathVariable String id, @RequestBody Project project)
+            throws ExecutionException, InterruptedException {
+        projectService.updateProject(id, project);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteProject(@PathVariable String id)
+            throws ExecutionException, InterruptedException {
+        projectService.deleteProject(id);
+    }
 }

@@ -1,0 +1,165 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: #0a1224;
+    color: #e7ecf6;
+    min-height: 100vh;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.login-box {
+    background: #12213d;
+    border: 1px solid rgba(148, 163, 196, 0.2);
+    padding: 2.5rem;
+    border-radius: 12px;
+    width: 320px;
+}
+
+.login-box h1 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 0.7rem;
+    margin-bottom: 1rem;
+    background: #16294a;
+    border: 1px solid rgba(148, 163, 196, 0.2);
+    color: #e7ecf6;
+    border-radius: 6px;
+}
+
+.login-box button,
+.admin-form button,
+.photo-upload-row button {
+    background: #38bdf8;
+    color: #0a1224;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.error-text {
+    color: #ff5c7a;
+    font-size: 0.85rem;
+    margin-top: 0.8rem;
+}
+
+.status-text {
+    font-size: 0.85rem;
+    margin-top: 0.8rem;
+    color: #9fb0cc;
+}
+
+.dashboard {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid rgba(148, 163, 196, 0.3);
+    color: #e7ecf6;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.panel {
+    background: #12213d;
+    border: 1px solid rgba(148, 163, 196, 0.15);
+    border-radius: 12px;
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.panel h2 {
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+}
+
+.panel h3 {
+    margin: 1.5rem 0 1rem;
+    font-size: 0.9rem;
+    color: #9fb0cc;
+}
+
+.photo-upload-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #16294a;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+}
+
+.item-row .item-actions button {
+    background: transparent;
+    border: 1px solid rgba(148, 163, 196, 0.3);
+    color: #e7ecf6;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+    padding: 0.7rem;
+    background: #16294a;
+    border: 1px solid rgba(148, 163, 196, 0.2);
+    color: #e7ecf6;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.admin-form textarea {
+    min-height: 80px;
+    resize: vertical;
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Portfolio</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div id="loginScreen" class="login-screen">
+    <div class="login-box">
+        <h1>Admin Login</h1>
+        <input type="password" id="passwordInput" placeholder="Enter admin password" autocomplete="off">
+        <button id="loginBtn">Log In</button>
+        <p id="loginError" class="error-text"></p>
+    </div>
+</div>
+
+<div id="dashboard" class="dashboard hidden">
+    <header class="admin-header">
+        <h1>Portfolio Admin</h1>
+        <button id="logoutBtn" class="btn-secondary">Log Out</button>
+    </header>
+
+    <section class="panel">
+        <h2>Profile Photo</h2>
+        <div class="photo-upload-row">
+            <input type="file" id="photoInput" accept="image/*">
+            <button id="uploadPhotoBtn">Upload Photo</button>
+        </div>
+        <p id="photoStatus" class="status-text"></p>
+    </section>
+
+    <section class="panel">
+        <h2>Projects</h2>
+
+        <div id="projectsList" class="items-list"></div>
+
+        <h3>Add New Project</h3>
+        <form id="projectForm" class="admin-form">
+            <input type="hidden" id="projectId">
+            <input type="text" id="projTitle" placeholder="Title" required>
+            <select id="projCategory" required>
+                <option value="cyber">Cybersecurity</option>
+                <option value="backend">Backend</option>
+                <option value="db">Database</option>
+            </select>
+            <textarea id="projDescription" placeholder="Description" required></textarea>
+            <input type="text" id="projPurpose" placeholder="Purpose">
+            <input type="text" id="projTechnologies" placeholder="Technologies (comma-separated)">
+            <input type="text" id="projGithubUrl" placeholder="GitHub URL">
+            <input type="text" id="projLiveUrl" placeholder="Live URL">
+            <input type="number" id="projOrder" placeholder="Order" value="1">
+            <button type="submit" id="projSubmitBtn">Add Project</button>
+            <button type="button" id="projCancelBtn" class="btn-secondary hidden">Cancel Edit</button>
+        </form>
+        <p id="projectStatus" class="status-text"></p>
+    </section>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
