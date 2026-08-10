@@ -65,7 +65,13 @@ async function handlePhotoUpload() {
     if (!fileInput.files[0]) {
         status.textContent = 'Choose a file first.';
         return;
+
     }
+    if (fileInput.files[0].size > 700 * 1024) {
+        status.textContent = 'File is too large. Please use an image under 700KB.';
+        return;
+    }
+
 
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
