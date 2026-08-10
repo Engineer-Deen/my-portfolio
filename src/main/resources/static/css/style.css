@@ -869,6 +869,27 @@ section {
     letter-spacing: 0.06em;
 }
 
+.project-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.project-links a {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--neon);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+}
+
+.project-links a:hover {
+    color: var(--neon2);
+}
+
 /* ==========================================================================
    Research
    ========================================================================== */

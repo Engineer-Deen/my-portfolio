@@ -2,7 +2,6 @@ const API_BASE_URL = 'https://portfolio-backend-0zx0.onrender.com';
 
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
-    loadHeroPhoto();
     loadSkills();
     loadResearch();
     wireSupportButtons();
@@ -10,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     wireScrollReveal();
     wireActiveNavHighlight();
     setFooterYear();
+    loadHeroPhoto();
 });
 
 async function loadProjects() {
@@ -33,6 +33,12 @@ async function loadProjects() {
         <div class="project-tech">
           ${p.techList.map(t => `<span class="tech-tag">${escapeHtml(t)}</span>`).join('')}
         </div>
+        ${(p.githubUrl || p.liveUrl) ? `
+          <div class="project-links">
+            ${p.githubUrl ? `<a href="${escapeHtml(p.githubUrl)}" target="_blank" rel="noopener">GitHub &rarr;</a>` : ''}
+            ${p.liveUrl ? `<a href="${escapeHtml(p.liveUrl)}" target="_blank" rel="noopener">Live Demo &rarr;</a>` : ''}
+          </div>
+        ` : ''}
       </div>
     `).join('');
 
@@ -95,13 +101,6 @@ async function loadResearch() {
         console.error('Failed to load research topics', err);
     }
 }
-//To Fetch our image from the Database
-
-function loadHeroPhoto(){ const img = document.getElementById
-('heroPhoto'); const testImg = new Image(); testImg.onload = () =>
-{ img.src = `${API_BASE_URL}/api/settings/photo`; }; testImg.onerror = () =>
-{ /* keep the default static images/photo.jpg */ }; testImg.src = `${API_BASE_URL}/api/settings/photo`; }
-
 
 function wireSupportButtons() {
     const ids = ['navSupportBtn', 'mobileSupportBtn', 'heroSupportBtn', 'supportCardBtn'];
@@ -187,6 +186,14 @@ function setFooterYear() {
     document.getElementById('footerYear').textContent = new Date().getFullYear();
 }
 
+function loadHeroPhoto() {
+    const img = document.getElementById('heroPhoto');
+    const testImg = new Image();
+    testImg.onload = () => { img.src = `${API_BASE_URL}/api/settings/photo`; };
+    testImg.onerror = () => { /* keep the default static images/photo.jpg */ };
+    testImg.src = `${API_BASE_URL}/api/settings/photo`;
+}
+
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
@@ -224,4 +231,3 @@ function escapeHtml(str) {
     div.textContent = str;
     return div.innerHTML;
 }
-
