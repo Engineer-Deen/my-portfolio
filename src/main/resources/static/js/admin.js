@@ -155,7 +155,7 @@ async function handleProjectSubmit(e) {
         githubUrl: document.getElementById('projGithubUrl').value,
         liveUrl: document.getElementById('projLiveUrl').value,
         order: parseInt(document.getElementById('projOrder').value, 10),
-        isActive: true,
+        active: true,
     };
 
     try {
