@@ -1,5 +1,6 @@
 package com.myportfolio.portfolio.exception;
 
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,4 +37,7 @@ public class GlobalExceptionHandler {
                 "message", "Something went wrong. Please try again shortly."
         ));
     }
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<?> handleUploadTooLarge(MaxUploadSizeExceededException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of( "success", false, "message", "File is too large. Please use an image under 700KB." )); }
 }
