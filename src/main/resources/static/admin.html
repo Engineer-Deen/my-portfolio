@@ -95,6 +95,27 @@
     </section>
 </div>
 
+<section class="panel">
+    <h2>Job Postings</h2>
+
+    <div id="postingsList" class="items-list"></div>
+
+    <h3>Add New Job Posting</h3>
+    <form id="postingForm" class="admin-form">
+        <input type="hidden" id="postingId">
+        <input type="text" id="postingTitle" placeholder="Position Title (e.g. DeenPOS Sales Agent)" required>
+        <textarea id="postingPurpose" placeholder="Purpose / description of what they're applying for" required></textarea>
+        <input type="number" id="postingOrder" placeholder="Order" value="1">
+        <textarea id="postingFields" placeholder="One custom field per line, format: Label|type|required&#10;Years of Experience|text|true&#10;Why do you want this role?|textarea|true&#10;Phone Number|tel|false&#10;&#10;Valid types: text, email, tel, number, textarea"></textarea>
+        <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:#9fb0cc;">
+            <input type="checkbox" id="postingActive" checked style="width:auto;"> Active (visible on site)
+        </label>
+        <button type="submit" id="postingSubmitBtn">Add Posting</button>
+        <button type="button" id="postingCancelBtn" class="btn-secondary hidden">Cancel Edit</button>
+    </form>
+    <p id="postingStatus" class="status-text"></p>
+</section>
+
 <script src="js/admin.js"></script>
 </body>
 </html>

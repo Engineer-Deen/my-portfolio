@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     wireActiveNavHighlight();
     setFooterYear();
     loadHeroPhoto();
-});
+    loadPostings(); });
 
 async function loadProjects() {
     const grid = document.getElementById('projectsGrid');
@@ -230,4 +230,119 @@ function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+}
+
+async function loadPostings() {
+    const intro = document.getElementById('applyIntro');
+    const selector = document.getElementById('postingsSelector');
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/postings`);
+        const postings = await res.json();
+
+        if (postings.length === 0) {
+            intro.textContent = 'No open positions right now, check back soon.';
+            return;
+        }
+
+        if (postings.length === 1) {
+            intro.textContent = postings[0].purpose;
+            renderApplicationForm(postings[0]);
+            return;
+        }
+
+        intro.textContent = 'Select a position below to apply.';
+        selector.innerHTML = postings.map(p => `
+      <button class="filter-btn" onclick='selectPosting(${JSON.stringify(p)})'>${escapeHtml(p.title)}</button>
+    `).join('');
+    } catch (err) {
+        intro.textContent = "Couldn't load open positions right now.";
+    }
+}
+
+function selectPosting(posting) {
+    document.getElementById('applyIntro').textContent = posting.purpose;
+    renderApplicationForm(posting);
+}
+
+function renderApplicationForm(posting) {
+    const container = document.getElementById('applicationFormContainer');
+
+    const customFieldsHtml = (posting.fields || []).map(f => {
+        const inputHtml = f.type === 'textarea'
+            ? `<textarea id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''} rows="4"></textarea>`
+            : `<input type="${f.type}" id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''}>`;
+
+        return `
+      <div class="form-field">
+        <label>${escapeHtml(f.label)}</label>
+        ${inputHtml}
+      </div>
+    `;
+    }).join('');
+
+    container.innerHTML = `
+    <form class="contact-form" id="applicationForm">
+      <div class="form-field">
+        <label>Your Name</label>
+        <input type="text" id="applicantName" required>
+      </div>
+      <div class="form-field">
+        <label>Email Address</label>
+        <input type="email" id="applicantEmail" required>
+      </div>
+      ${customFieldsHtml}
+      <button type="submit" class="btn-primary" id="applicationSubmitBtn" style="width:100%;text-align:center;">Submit Application</button>
+      <div id="application-feedback" style="font-family:var(--mono);font-size:0.72rem;display:none;text-align:center;margin-top:0.5rem;"></div>
+    </form>
+  `;
+
+    document.getElementById('applicationForm').addEventListener('submit', (e) => handleApplicationSubmit(e, posting));
+}
+
+async function handleApplicationSubmit(e, posting) {
+    e.preventDefault();
+    const btn = document.getElementById('applicationSubmitBtn');
+    const feedback = document.getElementById('application-feedback');
+
+    btn.textContent = 'Submitting...';
+    btn.disabled = true;
+
+    const responses = {};
+    (posting.fields || []).forEach(f => {
+        const el = document.getElementById(`field_${f.label}`);
+        if (el) responses[f.label] = el.value;
+    });
+
+    const payload = {
+        postingId: posting.id,
+        postingTitle: posting.title,
+        applicantName: document.getElementById('applicantName').value,
+        applicantEmail: document.getElementById('applicantEmail').value,
+        responses: responses,
+    };
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/applications`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+
+        feedback.style.color = 'var(--neon2)';
+        feedback.style.display = 'block';
+        feedback.textContent = data.success ? '✓ ' + data.message : 'Something went wrong. Please try again.';
+
+        if (data.success) {
+            document.getElementById('applicationForm').reset();
+        }
+    } catch (err) {
+        feedback.style.color = 'var(--red)';
+        feedback.style.display = 'block';
+        feedback.textContent = 'Network error. Please try again.';
+    }
+
+    btn.textContent = 'Submit Application';
+    btn.disabled = false;
 }

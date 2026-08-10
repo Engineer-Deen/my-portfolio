@@ -28,7 +28,8 @@ import java.io.IOException;
         boolean isProtectedPath = path.startsWith("/api/projects")
                 || path.startsWith("/api/skills")
                 || path.startsWith("/api/research")
-                || path.startsWith("/api/settings");
+                || path.startsWith("/api/settings")
+                || path.startsWith("/api/postings");
 
         boolean isWriteMethod = method.equals("POST") || method.equals("PUT") || method.equals("DELETE");
 

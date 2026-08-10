@@ -2,6 +2,7 @@ package com.myportfolio.portfolio.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myportfolio.portfolio.model.ContactMessage;
+import com.myportfolio.portfolio.model.JobApplication;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,39 @@ public class EmailService {
                 "text", body
         );
 
+        sendViaResend(payload);
+    }
+
+    public void sendApplicationNotification(JobApplication application) throws Exception {
+        StringBuilder responsesText = new StringBuilder();
+        if (application.getResponses() != null) {
+            application.getResponses().forEach((label, value) ->
+                    responsesText.append(label).append(": ").append(value).append("\n")
+            );
+        }
+
+        String body =
+                "New application received for: " + application.getPostingTitle() + "\n" +
+                        "─────────────────────────────────────────\n\n" +
+                        "Applicant Name:  " + application.getApplicantName() + "\n" +
+                        "Applicant Email: " + application.getApplicantEmail() + "\n\n" +
+                        responsesText +
+                        "\n─────────────────────────────────────────\n" +
+                        "Sent from IP: " + application.getIpAddress() + "\n" +
+                        "Reply directly to this email to respond to " + application.getApplicantName() + ".";
+
+        Map<String, Object> payload = Map.of(
+                "from", application.getApplicantName() + " (Job Application) <" + fromEmail + ">",
+                "to", List.of(receiverEmail),
+                "reply_to", application.getApplicantEmail(),
+                "subject", "📋 New application: " + application.getPostingTitle() + " — " + application.getApplicantName(),
+                "text", body
+        );
+
+        sendViaResend(payload);
+    }
+
+    private void sendViaResend(Map<String, Object> payload) throws Exception {
         String jsonPayload = objectMapper.writeValueAsString(payload);
 
         HttpRequest request = HttpRequest.newBuilder()

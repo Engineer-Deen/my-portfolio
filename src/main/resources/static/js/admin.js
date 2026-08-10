@@ -1,5 +1,6 @@
 const API_BASE_URL = 'https://portfolio-backend-0zx0.onrender.com';
 
+
 document.addEventListener('DOMContentLoaded', () => {
     const savedPassword = sessionStorage.getItem('adminPassword');
     if (savedPassword) {
@@ -15,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('skillGroupCancelBtn').addEventListener('click', resetSkillGroupForm);
     document.getElementById('researchForm').addEventListener('submit', handleResearchSubmit);
     document.getElementById('researchCancelBtn').addEventListener('click', resetResearchForm);
+    document.getElementById('postingForm').addEventListener('submit', handlePostingSubmit);
+    document.getElementById('postingCancelBtn').addEventListener('click', resetPostingForm);
+
 });
 
 function handleLogin() {
@@ -40,6 +44,7 @@ function loadAllAdminData() {
     loadProjectsList();
     loadSkillGroupsList();
     loadResearchList();
+    loadPostingsList();
 }
 
 function adminHeaders(extra = {}) {
@@ -398,6 +403,118 @@ async function deleteResearch(id) {
         }
 
         loadResearchList();
+    } catch (err) {
+        alert('Delete failed. Please try again.');
+    }
+}
+
+async function loadPostingsList() {
+    const list = document.getElementById('postingsList');
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/postings/all`);
+        const postings = await res.json();
+
+        list.innerHTML = postings.map(p => `
+      <div class="item-row">
+        <span>${p.title} ${p.active ? '' : '(inactive)'}</span>
+        <span class="item-actions">
+          <button onclick='editPosting(${JSON.stringify(p)})'>Edit</button>
+          <button onclick="deletePosting('${p.id}')">Delete</button>
+        </span>
+      </div>
+    `).join('');
+    } catch (err) {
+        list.innerHTML = '<p class="status-text">Failed to load job postings.</p>';
+    }
+}
+
+function fieldsToText(fields) {
+    return (fields || []).map(f => `${f.label}|${f.type}|${f.required}`).join('\n');
+}
+
+function textToFields(text) {
+    return text.split('\n').map(line => line.trim()).filter(Boolean).map((line, i) => {
+        const [label, type, required] = line.split('|').map(s => s.trim());
+        return {
+            label,
+            type: type || 'text',
+            required: required === 'true',
+            order: i + 1,
+        };
+    });
+}
+
+function editPosting(posting) {
+    document.getElementById('postingId').value = posting.id;
+    document.getElementById('postingTitle').value = posting.title;
+    document.getElementById('postingPurpose').value = posting.purpose;
+    document.getElementById('postingOrder').value = posting.order;
+    document.getElementById('postingFields').value = fieldsToText(posting.fields);
+    document.getElementById('postingActive').checked = posting.active;
+    document.getElementById('postingSubmitBtn').textContent = 'Save Changes';
+    document.getElementById('postingCancelBtn').classList.remove('hidden');
+    window.scrollTo({ top: document.getElementById('postingForm').offsetTop, behavior: 'smooth' });
+}
+
+function resetPostingForm() {
+    document.getElementById('postingForm').reset();
+    document.getElementById('postingId').value = '';
+    document.getElementById('postingActive').checked = true;
+    document.getElementById('postingSubmitBtn').textContent = 'Add Posting';
+    document.getElementById('postingCancelBtn').classList.add('hidden');
+}
+
+async function handlePostingSubmit(e) {
+    e.preventDefault();
+    const status = document.getElementById('postingStatus');
+
+    const id = document.getElementById('postingId').value;
+    const payload = {
+        title: document.getElementById('postingTitle').value,
+        purpose: document.getElementById('postingPurpose').value,
+        order: parseInt(document.getElementById('postingOrder').value, 10),
+        active: document.getElementById('postingActive').checked,
+        fields: textToFields(document.getElementById('postingFields').value),
+    };
+
+    try {
+        const res = await fetch(
+            id ? `${API_BASE_URL}/api/postings/${id}` : `${API_BASE_URL}/api/postings`,
+            {
+                method: id ? 'PUT' : 'POST',
+                headers: adminHeaders({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify(payload),
+            }
+        );
+
+        if (res.status === 401) {
+            handleAuthFailure();
+            return;
+        }
+
+        status.textContent = id ? '✓ Posting updated.' : '✓ Posting added.';
+        resetPostingForm();
+        loadPostingsList();
+    } catch (err) {
+        status.textContent = 'Save failed. Please try again.';
+    }
+}
+
+async function deletePosting(id) {
+    if (!confirm('Delete this job posting?')) return;
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/postings/${id}`, {
+            method: 'DELETE',
+            headers: adminHeaders(),
+        });
+
+        if (res.status === 401) {
+            handleAuthFailure();
+            return;
+        }
+
+        loadPostingsList();
     } catch (err) {
         alert('Delete failed. Please try again.');
     }
