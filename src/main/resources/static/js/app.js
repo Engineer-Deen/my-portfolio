@@ -269,11 +269,13 @@ function renderApplicationForm(posting) {
     const container = document.getElementById('applicationFormContainer');
 
     const customFieldsHtml = (posting.fields || []).map(f => {
-        const inputHtml = f.type === 'textarea'
-            ? `<textarea id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''} rows="4"></textarea>`
-            : `<input type="${f.type}" id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''}>`;
-
+        const extraAttrs = f.type === 'tel'
+            ? 'pattern="[0-9+\\-\\s()]{7,20}" title="Enter a valid phone number"' : f.type === 'textarea'
+                ? 'minlength="10"' : ''; const inputHtml = f.type === 'textarea'
+            ? `<textarea id="field_${escapeHtml(f.label)}" ${f.required 
+                ? 'required' : ''} ${extraAttrs} rows="4"></textarea>` : `<input type="${f.type}" id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''} ${extraAttrs}>`;
         return `
+      
       <div class="form-field">
         <label>${escapeHtml(f.label)}</label>
         ${inputHtml}

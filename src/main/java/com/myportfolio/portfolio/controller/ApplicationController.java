@@ -4,6 +4,7 @@ import com.myportfolio.portfolio.model.JobApplication;
 import com.myportfolio.portfolio.service.ApplicationService;
 import com.myportfolio.portfolio.util.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,17 +26,22 @@ public class ApplicationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> submitApplication(@RequestBody JobApplication application,
+    public ResponseEntity<?> submitApplication(@Valid @RequestBody JobApplication application,
                                                HttpServletRequest request)
             throws ExecutionException, InterruptedException {
 
-        String ip = WebUtils.getClientIp(request);
-        applicationService.saveApplication(application, ip);
+        try {
+            String ip = WebUtils.getClientIp(request);
+            applicationService.saveApplication(application, ip);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of(
-                        "success", true,
-                        "message", "Application received. Thank you for applying!"
-                ));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of(
+                            "success", true,
+                            "message", "Application received. Thank you for applying!"
+                    ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("success", false, "message", e.getMessage()));
+        }
     }
 }
