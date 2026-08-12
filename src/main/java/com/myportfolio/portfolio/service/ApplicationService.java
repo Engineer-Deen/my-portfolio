@@ -6,12 +6,16 @@ import com.google.cloud.firestore.Firestore;
 import com.myportfolio.portfolio.model.JobApplication;
 import com.myportfolio.portfolio.model.JobPosting;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Service
 public class ApplicationService {
+
+    private static final long MAX_CV_BYTES = 2_000_000; // 2MB
 
     private final Firestore firestore;
     private final EmailService emailService;
@@ -21,18 +25,27 @@ public class ApplicationService {
         this.emailService = emailService;
     }
 
-    public void saveApplication(JobApplication application, String ipAddress)
-            throws ExecutionException, InterruptedException {
+    public void saveApplication(JobApplication application, MultipartFile cv, String ipAddress)
+            throws IOException, ExecutionException, InterruptedException {
 
         validateAgainstPosting(application);
 
+        if (cv == null || cv.isEmpty()) {
+            throw new IllegalArgumentException("Please attach your CV/Resume.");
+        }
+
+        if (cv.getSize() > MAX_CV_BYTES) {
+            throw new IllegalArgumentException("CV file is too large. Please use a file under 2MB.");
+        }
+
         application.setIpAddress(ipAddress);
         application.setCreatedAt(Timestamp.now());
+        application.setCvFileName(cv.getOriginalFilename());
 
         firestore.collection("job_applications").add(application).get();
 
         try {
-            emailService.sendApplicationNotification(application);
+            emailService.sendApplicationNotification(application, cv.getBytes(), cv.getOriginalFilename());
         } catch (Exception e) {
             System.err.println("Failed to send application notification email: " + e.getMessage());
         }

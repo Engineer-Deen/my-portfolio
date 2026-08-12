@@ -8,12 +8,12 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/api/applications")
@@ -26,13 +26,14 @@ public class ApplicationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> submitApplication(@Valid @RequestBody JobApplication application,
-                                               HttpServletRequest request)
-            throws ExecutionException, InterruptedException {
+    public ResponseEntity<?> submitApplication(
+            @RequestPart("application") @Valid JobApplication application,
+            @RequestPart("cv") MultipartFile cv,
+            HttpServletRequest request) {
 
         try {
             String ip = WebUtils.getClientIp(request);
-            applicationService.saveApplication(application, ip);
+            applicationService.saveApplication(application, cv, ip);
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(Map.of(
@@ -42,6 +43,9 @@ public class ApplicationController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("success", false, "message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Something went wrong. Please try again."));
         }
     }
 }

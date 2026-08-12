@@ -26,6 +26,9 @@ public class JobApplication {
 
     private Map<String, String> responses;
 
+    @PropertyName("cv_file_name")
+    private String cvFileName;
+
     @PropertyName("ip_address")
     private String ipAddress;
 

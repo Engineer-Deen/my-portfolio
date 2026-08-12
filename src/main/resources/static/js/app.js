@@ -270,12 +270,16 @@ function renderApplicationForm(posting) {
 
     const customFieldsHtml = (posting.fields || []).map(f => {
         const extraAttrs = f.type === 'tel'
-            ? 'pattern="[0-9+\\-\\s()]{7,20}" title="Enter a valid phone number"' : f.type === 'textarea'
-                ? 'minlength="10"' : ''; const inputHtml = f.type === 'textarea'
-            ? `<textarea id="field_${escapeHtml(f.label)}" ${f.required 
-                ? 'required' : ''} ${extraAttrs} rows="4"></textarea>` : `<input type="${f.type}" id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''} ${extraAttrs}>`;
+            ? 'pattern="[0-9+\\-\\s()]{7,20}" title="Enter a valid phone number"'
+            : f.type === 'textarea'
+                ? 'minlength="10"'
+                : '';
+
+        const inputHtml = f.type === 'textarea'
+            ? `<textarea id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''} ${extraAttrs} rows="4"></textarea>`
+            : `<input type="${f.type}" id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''} ${extraAttrs}>`;
+
         return `
-      
       <div class="form-field">
         <label>${escapeHtml(f.label)}</label>
         ${inputHtml}
@@ -294,6 +298,10 @@ function renderApplicationForm(posting) {
         <input type="email" id="applicantEmail" required>
       </div>
       ${customFieldsHtml}
+      <div class="form-field">
+        <label>CV / Resume (PDF or Word, max 2MB)</label>
+        <input type="file" id="applicantCv" accept=".pdf,.doc,.docx" required>
+      </div>
       <button type="submit" class="btn-primary" id="applicationSubmitBtn" style="width:100%;text-align:center;">Submit Application</button>
       <div id="application-feedback" style="font-family:var(--mono);font-size:0.72rem;display:none;text-align:center;margin-top:0.5rem;"></div>
     </form>
@@ -306,6 +314,21 @@ async function handleApplicationSubmit(e, posting) {
     e.preventDefault();
     const btn = document.getElementById('applicationSubmitBtn');
     const feedback = document.getElementById('application-feedback');
+    const cvInput = document.getElementById('applicantCv');
+
+    if (!cvInput.files[0]) {
+        feedback.style.color = 'var(--red)';
+        feedback.style.display = 'block';
+        feedback.textContent = 'Please attach your CV/Resume.';
+        return;
+    }
+
+    if (cvInput.files[0].size > 2 * 1024 * 1024) {
+        feedback.style.color = 'var(--red)';
+        feedback.style.display = 'block';
+        feedback.textContent = 'CV file is too large. Please use a file under 2MB.';
+        return;
+    }
 
     btn.textContent = 'Submitting...';
     btn.disabled = true;
@@ -316,7 +339,7 @@ async function handleApplicationSubmit(e, posting) {
         if (el) responses[f.label] = el.value;
     });
 
-    const payload = {
+    const applicationData = {
         postingId: posting.id,
         postingTitle: posting.title,
         applicantName: document.getElementById('applicantName').value,
@@ -324,17 +347,20 @@ async function handleApplicationSubmit(e, posting) {
         responses: responses,
     };
 
+    const formData = new FormData();
+    formData.append('application', new Blob([JSON.stringify(applicationData)], { type: 'application/json' }));
+    formData.append('cv', cvInput.files[0]);
+
     try {
         const res = await fetch(`${API_BASE_URL}/api/applications`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
+            body: formData,
         });
         const data = await res.json();
 
-        feedback.style.color = 'var(--neon2)';
+        feedback.style.color = data.success ? 'var(--neon2)' : 'var(--red)';
         feedback.style.display = 'block';
-        feedback.textContent = data.success ? '✓ ' + data.message : 'Something went wrong. Please try again.';
+        feedback.textContent = data.success ? '✓ ' + data.message : data.message;
 
         if (data.success) {
             document.getElementById('applicationForm').reset();

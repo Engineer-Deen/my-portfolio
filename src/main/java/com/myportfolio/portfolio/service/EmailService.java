@@ -10,6 +10,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,19 +46,18 @@ public class EmailService {
                         "Sent from IP: " + msg.getIpAddress() + "\n" +
                         "Reply directly to this email to respond to " + msg.getName() + ".";
 
-        Map<String, Object> payload = Map.of(
-                "from", msg.getName() + " (via Portfolio) <" + fromEmail + ">",
-                "to", List.of(receiverEmail),
-                "reply_to", msg.getEmail(),
-                "subject", "📬 New message from " + msg.getName() +
-                        (subjectLine.equals("(no subject provided)") ? "" : ": " + subjectLine),
-                "text", body
-        );
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("from", msg.getName() + " (via Portfolio) <" + fromEmail + ">");
+        payload.put("to", List.of(receiverEmail));
+        payload.put("reply_to", msg.getEmail());
+        payload.put("subject", "📬 New message from " + msg.getName() +
+                (subjectLine.equals("(no subject provided)") ? "" : ": " + subjectLine));
+        payload.put("text", body);
 
         sendViaResend(payload);
     }
 
-    public void sendApplicationNotification(JobApplication application) throws Exception {
+    public void sendApplicationNotification(JobApplication application, byte[] cvBytes, String cvFileName) throws Exception {
         StringBuilder responsesText = new StringBuilder();
         if (application.getResponses() != null) {
             application.getResponses().forEach((label, value) ->
@@ -74,13 +75,19 @@ public class EmailService {
                         "Sent from IP: " + application.getIpAddress() + "\n" +
                         "Reply directly to this email to respond to " + application.getApplicantName() + ".";
 
-        Map<String, Object> payload = Map.of(
-                "from", application.getApplicantName() + " (Job Application) <" + fromEmail + ">",
-                "to", List.of(receiverEmail),
-                "reply_to", application.getApplicantEmail(),
-                "subject", "📋 New application: " + application.getPostingTitle() + " — " + application.getApplicantName(),
-                "text", body
-        );
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("from", application.getApplicantName() + " (Job Application) <" + fromEmail + ">");
+        payload.put("to", List.of(receiverEmail));
+        payload.put("reply_to", application.getApplicantEmail());
+        payload.put("subject", "📋 New application: " + application.getPostingTitle() + " — " + application.getApplicantName());
+        payload.put("text", body);
+
+        if (cvBytes != null && cvFileName != null) {
+            Map<String, Object> attachment = new HashMap<>();
+            attachment.put("filename", cvFileName);
+            attachment.put("content", Base64.getEncoder().encodeToString(cvBytes));
+            payload.put("attachments", List.of(attachment));
+        }
 
         sendViaResend(payload);
     }
