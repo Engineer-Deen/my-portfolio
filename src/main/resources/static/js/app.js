@@ -269,15 +269,35 @@ function renderApplicationForm(posting) {
     const container = document.getElementById('applicationFormContainer');
 
     const customFieldsHtml = (posting.fields || []).map(f => {
-        const extraAttrs = f.type === 'tel'
-            ? 'pattern="[0-9+\\-\\s()]{7,20}" title="Enter a valid phone number"'
-            : f.type === 'textarea'
-                ? 'minlength="10"'
-                : '';
+        let inputHtml;
 
-        const inputHtml = f.type === 'textarea'
-            ? `<textarea id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''} ${extraAttrs} rows="4"></textarea>`
-            : `<input type="${f.type}" id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''} ${extraAttrs}>`;
+        if (f.type === 'select') {
+            const options = (f.options || []).map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('');
+            inputHtml = `
+        <select id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''}>
+          <option value="">Select...</option>
+          ${options}
+        </select>
+      `;
+        } else if (f.type === 'radio') {
+            inputHtml = `
+        <div class="radio-group">
+          ${(f.options || []).map(o => `
+            <label class="radio-option">
+              <input type="radio" name="radiofield_${escapeHtml(f.label)}" value="${escapeHtml(o)}" ${f.required ? 'required' : ''}>
+              ${escapeHtml(o)}
+            </label>
+          `).join('')}
+        </div>
+      `;
+        } else if (f.type === 'textarea') {
+            inputHtml = `<textarea id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''} minlength="10" rows="4"></textarea>`;
+        } else {
+            const extraAttrs = f.type === 'tel'
+                ? 'pattern="[0-9+\\-\\s()]{7,20}" title="Enter a valid phone number"'
+                : '';
+            inputHtml = `<input type="${f.type}" id="field_${escapeHtml(f.label)}" ${f.required ? 'required' : ''} ${extraAttrs}>`;
+        }
 
         return `
       <div class="form-field">

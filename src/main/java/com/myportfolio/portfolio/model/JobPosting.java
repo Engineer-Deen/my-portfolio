@@ -29,6 +29,7 @@ public class JobPosting {
         private String label;
         private String type;
         private boolean required;
+        private List<String> options;
         private int order;
     }
 }

@@ -1,5 +1,42 @@
 const API_BASE_URL = 'https://portfolio-backend-0zx0.onrender.com';
 
+const SIERRA_LEONE_CITIES = [
+    'Freetown', 'Bo', 'Kenema', 'Makeni', 'Koidu Town', 'Waterloo', 'Lunsar',
+    'Port Loko', 'Kabala', 'Magburaka', 'Kailahun', 'Kambia', 'Moyamba',
+    'Bonthe', 'Pujehun', 'Segbwema', 'Bumpe', 'Binkolo', 'Rokupr', 'Pendembu',
+    'Yengema', 'Newton', 'Hastings', 'Goderich', 'York', 'Regent', 'Tongo',
+    'Falaba', 'Taiama', 'Njala', 'Mattru Jong', 'Panguma', 'Zimmi', 'Daru',
+    'Gerihun', 'Jaiama', 'Masingbi', 'Mile 91', 'Kayima', 'Yele', 'Kukuna',
+    'Kissy', 'Wellington', 'Songo', 'Rotifunk',
+];
+
+const EDUCATION_LEVELS = [
+    'Primary Education',
+    'Secondary Education (WASSCE)',
+    'Vocational / Technical Diploma',
+    "Bachelor's Degree",
+    "Master's Degree",
+    'PhD / Doctorate',
+    'Other',
+];
+
+const STANDARD_FIELDS = [
+    { label: 'Phone Number', type: 'tel', required: true },
+    { label: 'City', type: 'select', required: true, options: SIERRA_LEONE_CITIES },
+    { label: 'Date of Birth', type: 'date', required: true },
+    { label: 'Highest Level of Education', type: 'select', required: true, options: EDUCATION_LEVELS },
+    { label: 'Most Recent Employer/Role', type: 'text', required: false },
+    { label: 'Years of Relevant Experience', type: 'number', required: true },
+    { label: 'Brief Work History', type: 'textarea', required: false },
+    { label: 'GitHub Profile/Portfolio Link', type: 'text', required: false },
+    { label: 'Technologies/Languages Known', type: 'text', required: false },
+    { label: 'LinkedIn Profile', type: 'text', required: false },
+    { label: 'Why Do You Want This Role?', type: 'textarea', required: true },
+    { label: 'How Did You Hear About This Position?', type: 'text', required: false },
+    { label: 'References (Name + Contact)', type: 'textarea', required: false },
+];
+
+let customFieldsBuilder = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     const savedPassword = sessionStorage.getItem('adminPassword');
@@ -19,6 +56,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('postingForm').addEventListener('submit', handlePostingSubmit);
     document.getElementById('postingCancelBtn').addEventListener('click', resetPostingForm);
 
+    document.getElementById('cfType').addEventListener('change', (e) => {
+        const optionsBox = document.getElementById('cfOptions');
+        if (e.target.value === 'select' || e.target.value === 'radio') {
+            optionsBox.classList.remove('hidden');
+        } else {
+            optionsBox.classList.add('hidden');
+        }
+    });
+    document.getElementById('addCustomFieldBtn').addEventListener('click', addCustomBuilderField);
+
+    resetPostingForm();
 });
 
 function handleLogin() {
@@ -61,6 +109,13 @@ function handleAuthFailure() {
     document.getElementById('loginError').textContent = 'Session expired or incorrect password. Please log in again.';
 }
 
+function escapeHtml(str) {
+    if (str == null) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 /* ---------- Photo ---------- */
 
 async function handlePhotoUpload() {
@@ -70,13 +125,12 @@ async function handlePhotoUpload() {
     if (!fileInput.files[0]) {
         status.textContent = 'Choose a file first.';
         return;
-
     }
+
     if (fileInput.files[0].size > 700 * 1024) {
         status.textContent = 'File is too large. Please use an image under 700KB.';
         return;
     }
-
 
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
@@ -408,6 +462,8 @@ async function deleteResearch(id) {
     }
 }
 
+/* ---------- Job Postings ---------- */
+
 async function loadPostingsList() {
     const list = document.getElementById('postingsList');
     try {
@@ -428,20 +484,101 @@ async function loadPostingsList() {
     }
 }
 
-function fieldsToText(fields) {
-    return (fields || []).map(f => `${f.label}|${f.type}|${f.required}`).join('\n');
+function renderStandardFieldsChecklist(existingFields = []) {
+    const container = document.getElementById('standardFieldsChecklist');
+    container.innerHTML = STANDARD_FIELDS.map((f, i) => {
+        const match = existingFields.find(ef => ef.label === f.label);
+        const included = !!match;
+        const required = match ? match.required : f.required;
+        return `
+      <div class="field-checkbox-row">
+        <span class="field-name">
+          <input type="checkbox" class="std-include" data-index="${i}" ${included ? 'checked' : ''}>
+          ${escapeHtml(f.label)}
+        </span>
+        <span class="required-toggle">
+          <input type="checkbox" class="std-required" data-index="${i}" ${required ? 'checked' : ''}> Required
+        </span>
+      </div>
+    `;
+    }).join('');
 }
 
-function textToFields(text) {
-    return text.split('\n').map(line => line.trim()).filter(Boolean).map((line, i) => {
-        const [label, type, required] = line.split('|').map(s => s.trim());
-        return {
-            label,
-            type: type || 'text',
-            required: required === 'true',
-            order: i + 1,
+function renderCustomFieldsBuilderList() {
+    const container = document.getElementById('customFieldsBuilderList');
+    if (customFieldsBuilder.length === 0) {
+        container.innerHTML = '<p class="status-text">No custom fields added yet.</p>';
+        return;
+    }
+    container.innerHTML = customFieldsBuilder.map((f, i) => `
+    <div class="item-row">
+      <span>${escapeHtml(f.label)} (${f.type}${f.required ? ', required' : ''})</span>
+      <span class="item-actions">
+        <button type="button" onclick="removeCustomBuilderField(${i})">Remove</button>
+      </span>
+    </div>
+  `).join('');
+}
+
+function addCustomBuilderField() {
+    const label = document.getElementById('cfLabel').value.trim();
+    const type = document.getElementById('cfType').value;
+    const required = document.getElementById('cfRequired').checked;
+    const optionsRaw = document.getElementById('cfOptions').value;
+
+    if (!label) {
+        alert('Please enter a field label.');
+        return;
+    }
+
+    const field = { label, type, required };
+    if (type === 'select' || type === 'radio') {
+        field.options = optionsRaw.split('\n').map(o => o.trim()).filter(Boolean);
+        if (field.options.length === 0) {
+            alert('Please enter at least one option for this field type.');
+            return;
+        }
+    }
+
+    customFieldsBuilder.push(field);
+    renderCustomFieldsBuilderList();
+
+    document.getElementById('cfLabel').value = '';
+    document.getElementById('cfType').value = 'text';
+    document.getElementById('cfRequired').checked = false;
+    document.getElementById('cfOptions').value = '';
+    document.getElementById('cfOptions').classList.add('hidden');
+}
+
+function removeCustomBuilderField(index) {
+    customFieldsBuilder.splice(index, 1);
+    renderCustomFieldsBuilderList();
+}
+
+function collectPostingFields() {
+    const fields = [];
+    let order = 1;
+
+    document.querySelectorAll('.std-include').forEach(cb => {
+        if (!cb.checked) return;
+        const i = parseInt(cb.dataset.index, 10);
+        const std = STANDARD_FIELDS[i];
+        const requiredCb = document.querySelector(`.std-required[data-index="${i}"]`);
+        const field = {
+            label: std.label,
+            type: std.type,
+            required: requiredCb.checked,
+            order: order++,
         };
+        if (std.options) field.options = std.options;
+        fields.push(field);
     });
+
+    customFieldsBuilder.forEach(f => {
+        fields.push({ ...f, order: order++ });
+    });
+
+    return fields;
 }
 
 function editPosting(posting) {
@@ -449,8 +586,13 @@ function editPosting(posting) {
     document.getElementById('postingTitle').value = posting.title;
     document.getElementById('postingPurpose').value = posting.purpose;
     document.getElementById('postingOrder').value = posting.order;
-    document.getElementById('postingFields').value = fieldsToText(posting.fields);
     document.getElementById('postingActive').checked = posting.active;
+
+    const stdLabels = STANDARD_FIELDS.map(f => f.label);
+    customFieldsBuilder = (posting.fields || []).filter(f => !stdLabels.includes(f.label));
+    renderStandardFieldsChecklist(posting.fields || []);
+    renderCustomFieldsBuilderList();
+
     document.getElementById('postingSubmitBtn').textContent = 'Save Changes';
     document.getElementById('postingCancelBtn').classList.remove('hidden');
     window.scrollTo({ top: document.getElementById('postingForm').offsetTop, behavior: 'smooth' });
@@ -460,6 +602,10 @@ function resetPostingForm() {
     document.getElementById('postingForm').reset();
     document.getElementById('postingId').value = '';
     document.getElementById('postingActive').checked = true;
+    customFieldsBuilder = [];
+    renderStandardFieldsChecklist([]);
+    renderCustomFieldsBuilderList();
+    document.getElementById('cfOptions').classList.add('hidden');
     document.getElementById('postingSubmitBtn').textContent = 'Add Posting';
     document.getElementById('postingCancelBtn').classList.add('hidden');
 }
@@ -474,7 +620,7 @@ async function handlePostingSubmit(e) {
         purpose: document.getElementById('postingPurpose').value,
         order: parseInt(document.getElementById('postingOrder').value, 10),
         active: document.getElementById('postingActive').checked,
-        fields: textToFields(document.getElementById('postingFields').value),
+        fields: collectPostingFields(),
     };
 
     try {

@@ -34,9 +34,7 @@
 
     <section class="panel">
         <h2>Projects</h2>
-
         <div id="projectsList" class="items-list"></div>
-
         <h3>Add New Project</h3>
         <form id="projectForm" class="admin-form">
             <input type="hidden" id="projectId">
@@ -60,9 +58,7 @@
 
     <section class="panel">
         <h2>Skills</h2>
-
         <div id="skillGroupsList" class="items-list"></div>
-
         <h3>Add New Skill Group</h3>
         <form id="skillGroupForm" class="admin-form">
             <input type="hidden" id="skillGroupId">
@@ -77,9 +73,7 @@
 
     <section class="panel">
         <h2>Research Topics</h2>
-
         <div id="researchList" class="items-list"></div>
-
         <h3>Add New Research Topic</h3>
         <form id="researchForm" class="admin-form">
             <input type="hidden" id="researchId">
@@ -93,28 +87,55 @@
         </form>
         <p id="researchStatus" class="status-text"></p>
     </section>
+
+    <section class="panel">
+        <h2>Job Postings</h2>
+        <div id="postingsList" class="items-list"></div>
+
+        <h3>Add New Job Posting</h3>
+        <form id="postingForm" class="admin-form">
+            <input type="hidden" id="postingId">
+            <input type="text" id="postingTitle" placeholder="Position Title (e.g. DeenPOS Sales Agent)" required>
+            <textarea id="postingPurpose" placeholder="Purpose / description of what they're applying for" required></textarea>
+            <input type="number" id="postingOrder" placeholder="Order" value="1">
+
+            <h4 class="field-builder-heading">Standard Fields</h4>
+            <p class="field-builder-hint">Tick which apply to this posting. Untick "Required" to make it optional instead.</p>
+            <div id="standardFieldsChecklist" class="standard-fields-list"></div>
+
+            <h4 class="field-builder-heading">Custom Fields</h4>
+            <p class="field-builder-hint">Anything not covered above — specific to this one posting.</p>
+            <div id="customFieldsBuilderList" class="items-list"></div>
+
+            <div class="custom-field-mini-form">
+                <input type="text" id="cfLabel" placeholder="Field label (e.g. Preferred Shift)">
+                <select id="cfType">
+                    <option value="text">Short Text</option>
+                    <option value="textarea">Paragraph</option>
+                    <option value="email">Email</option>
+                    <option value="tel">Phone</option>
+                    <option value="number">Number</option>
+                    <option value="date">Date</option>
+                    <option value="select">Dropdown</option>
+                    <option value="radio">Multiple Choice</option>
+                </select>
+                <textarea id="cfOptions" placeholder="Options, one per line (only for Dropdown / Multiple Choice)" class="hidden"></textarea>
+                <label class="inline-checkbox">
+                    <input type="checkbox" id="cfRequired"> Required
+                </label>
+                <button type="button" id="addCustomFieldBtn">+ Add This Field</button>
+            </div>
+
+            <label class="inline-checkbox">
+                <input type="checkbox" id="postingActive" checked> Active (visible on site)
+            </label>
+
+            <button type="submit" id="postingSubmitBtn">Add Posting</button>
+            <button type="button" id="postingCancelBtn" class="btn-secondary hidden">Cancel Edit</button>
+        </form>
+        <p id="postingStatus" class="status-text"></p>
+    </section>
 </div>
-
-<section class="panel">
-    <h2>Job Postings</h2>
-
-    <div id="postingsList" class="items-list"></div>
-
-    <h3>Add New Job Posting</h3>
-    <form id="postingForm" class="admin-form">
-        <input type="hidden" id="postingId">
-        <input type="text" id="postingTitle" placeholder="Position Title (e.g. DeenPOS Sales Agent)" required>
-        <textarea id="postingPurpose" placeholder="Purpose / description of what they're applying for" required></textarea>
-        <input type="number" id="postingOrder" placeholder="Order" value="1">
-        <textarea id="postingFields" placeholder="One custom field per line, format: Label|type|required&#10;Years of Experience|text|true&#10;Why do you want this role?|textarea|true&#10;Phone Number|tel|false&#10;&#10;Valid types: text, email, tel, number, textarea"></textarea>
-        <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:#9fb0cc;">
-            <input type="checkbox" id="postingActive" checked style="width:auto;"> Active (visible on site)
-        </label>
-        <button type="submit" id="postingSubmitBtn">Add Posting</button>
-        <button type="button" id="postingCancelBtn" class="btn-secondary hidden">Cancel Edit</button>
-    </form>
-    <p id="postingStatus" class="status-text"></p>
-</section>
 
 <script src="js/admin.js"></script>
 </body>
