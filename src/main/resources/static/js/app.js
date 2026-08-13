@@ -355,8 +355,13 @@ async function handleApplicationSubmit(e, posting) {
 
     const responses = {};
     (posting.fields || []).forEach(f => {
-        const el = document.getElementById(`field_${f.label}`);
-        if (el) responses[f.label] = el.value;
+        if (f.type === 'radio') {
+            const checked = document.querySelector(`input[name="radiofield_${f.label}"]:checked`);
+            responses[f.label] = checked ? checked.value : '';
+        } else {
+            const el = document.getElementById(`field_${f.label}`);
+            if (el) responses[f.label] = el.value;
+        }
     });
 
     const applicationData = {
