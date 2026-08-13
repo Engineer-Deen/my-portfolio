@@ -245,15 +245,14 @@ async function loadPostings() {
             return;
         }
 
-        if (postings.length === 1) {
-            intro.textContent = postings[0].purpose;
-            renderApplicationForm(postings[0]);
-            return;
-        }
-
         intro.textContent = 'Select a position below to apply.';
+        selector.className = 'postings-grid';
         selector.innerHTML = postings.map(p => `
-      <button class="filter-btn" onclick='selectPosting(${JSON.stringify(p)})'>${escapeHtml(p.title)}</button>
+      <div class="posting-card">
+        <div class="posting-card-title">${escapeHtml(p.title)}</div>
+        <p class="posting-card-desc">${escapeHtml(p.purpose)}</p>
+        <button class="btn-primary" onclick='selectPosting(${JSON.stringify(p)})'>Apply</button>
+      </div>
     `).join('');
     } catch (err) {
         intro.textContent = "Couldn't load open positions right now.";
@@ -261,8 +260,9 @@ async function loadPostings() {
 }
 
 function selectPosting(posting) {
-    document.getElementById('applyIntro').textContent = posting.purpose;
     renderApplicationForm(posting);
+    document.getElementById('applicationFormContainer').scrollIntoView({
+        behavior: 'smooth', block: 'start' });
 }
 
 function renderApplicationForm(posting) {
@@ -307,8 +307,8 @@ function renderApplicationForm(posting) {
     `;
     }).join('');
 
-    container.innerHTML = `
-    <form class="contact-form" id="applicationForm">
+    container.innerHTML = ` 
+ <div class="application-form-wrap"> <form class="contact-form" id="applicationForm">
       <div class="form-field">
         <label>Your Name</label>
         <input type="text" id="applicantName" required>

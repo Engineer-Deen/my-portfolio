@@ -12,7 +12,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-    @Order(1) public class AdminAuthFilter extends OncePerRequestFilter {
+@Order(1)
+public class AdminAuthFilter extends OncePerRequestFilter {
+
+    @Value("${admin.username}")
+    private String adminUsername;
 
     @Value("${admin.password}")
     private String adminPassword;
@@ -29,14 +33,19 @@ import java.io.IOException;
                 || path.startsWith("/api/skills")
                 || path.startsWith("/api/research")
                 || path.startsWith("/api/settings")
-                || path.startsWith("/api/postings");
+                || path.startsWith("/api/postings")
+                || path.startsWith("/api/admin");
 
         boolean isWriteMethod = method.equals("POST") || method.equals("PUT") || method.equals("DELETE");
 
         if (isProtectedPath && isWriteMethod) {
+            String suppliedUsername = request.getHeader("X-Admin-Username");
             String suppliedPassword = request.getHeader("X-Admin-Password");
 
-            if (suppliedPassword == null || !suppliedPassword.equals(adminPassword)) {
+            boolean valid = suppliedUsername != null && suppliedUsername.equals(adminUsername)
+                    && suppliedPassword != null && suppliedPassword.equals(adminPassword);
+
+            if (!valid) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
                 response.getWriter().write("{\"error\":\"Unauthorized\"}");

@@ -69,18 +69,56 @@ document.addEventListener('DOMContentLoaded', () => {
     resetPostingForm();
 });
 
-function handleLogin() {
-    const password = document.getElementById('passwordInput').value;
-    if (!password) return;
-    sessionStorage.setItem('adminPassword', password);
-    showDashboard();
-}
-
 function handleLogout() {
     sessionStorage.removeItem('adminPassword');
     document.getElementById('dashboard').classList.add('hidden');
     document.getElementById('loginScreen').classList.remove('hidden');
 }
+
+
+async function handleLogin() {
+    const username = document.getElementById('usernameInput').value;
+    const password = document.getElementById('passwordInput').value;
+    const errorEl = document.getElementById('loginError');
+    const loginBtn = document.getElementById('loginBtn');
+
+    errorEl.textContent = '';
+
+    if (!username || !password) {
+        errorEl.textContent = 'Please enter both username and password.';
+        return;
+    }
+
+    loginBtn.textContent = 'Checking...';
+    loginBtn.disabled = true;
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/admin/verify`, {
+            method: 'POST',
+            headers: {
+                'X-Admin-Username': username,
+                'X-Admin-Password': password,
+            },
+        });
+
+        if (res.status === 401) {
+            errorEl.textContent = 'Incorrect username or password.';
+            loginBtn.textContent = 'Log In';
+            loginBtn.disabled = false;
+            return;
+        }
+
+        sessionStorage.setItem('adminUsername', username);
+        sessionStorage.setItem('adminPassword', password);
+        showDashboard();
+    } catch (err) {
+        errorEl.textContent = 'Could not reach the server. Please try again.';
+    }
+
+    loginBtn.textContent = 'Log In';
+    loginBtn.disabled = false;
+}
+
 
 function showDashboard() {
     document.getElementById('loginScreen').classList.add('hidden');
@@ -95,12 +133,12 @@ function loadAllAdminData() {
     loadPostingsList();
 }
 
-function adminHeaders(extra = {}) {
+function adminHeaders(extra = {})
+{
     return {
-        'X-Admin-Password': sessionStorage.getItem('adminPassword'),
-        ...extra,
-    };
-}
+        'X-Admin-Username': sessionStorage.getItem('adminUsername'),
+        'X-Admin-Password': sessionStorage.getItem('adminPassword'), ...extra, }; }
+
 
 function handleAuthFailure() {
     sessionStorage.removeItem('adminPassword');
