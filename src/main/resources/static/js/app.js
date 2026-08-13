@@ -251,7 +251,7 @@ async function loadPostings() {
       <div class="posting-card">
         <div class="posting-card-title">${escapeHtml(p.title)}</div>
         <p class="posting-card-desc">${escapeHtml(p.purpose)}</p>
-        <button class="btn-primary" onclick='selectPosting(${JSON.stringify(p)})'>Apply</button>
+        <button class="btn-primary apply-btn" data-posting='${escapeHtml(JSON.stringify(p))}'>Apply</button>
       </div>
     `).join('');
     } catch (err) {
@@ -308,7 +308,9 @@ function renderApplicationForm(posting) {
     }).join('');
 
     container.innerHTML = ` 
- <div class="application-form-wrap"> <form class="contact-form" id="applicationForm">
+ <div class="application-form-wrap"> 
+ <form class="contact-form" id="applicationForm">
+ 
       <div class="form-field">
         <label>Your Name</label>
         <input type="text" id="applicantName" required>
