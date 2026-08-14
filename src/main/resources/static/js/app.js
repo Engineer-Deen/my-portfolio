@@ -232,6 +232,7 @@ function escapeHtml(str) {
     return div.innerHTML;
 }
 
+
 async function loadPostings() {
     const intro = document.getElementById('applyIntro');
     const selector = document.getElementById('postingsSelector');
@@ -251,7 +252,7 @@ async function loadPostings() {
       <div class="posting-card">
         <div class="posting-card-title">${escapeHtml(p.title)}</div>
         <p class="posting-card-desc">${escapeHtml(p.purpose)}</p>
-        <button class="btn-primary apply-btn" data-posting='${escapeHtml(JSON.stringify(p))}'>Apply</button>
+        <button class="btn-primary" onclick='selectPosting(${JSON.stringify(p)})'>Apply</button>
       </div>
     `).join('');
     } catch (err) {
@@ -261,8 +262,8 @@ async function loadPostings() {
 
 function selectPosting(posting) {
     renderApplicationForm(posting);
-    document.getElementById('applicationFormContainer').scrollIntoView({
-        behavior: 'smooth', block: 'start' });
+    document.getElementById('applicationFormContainer').
+    scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function renderApplicationForm(posting) {
