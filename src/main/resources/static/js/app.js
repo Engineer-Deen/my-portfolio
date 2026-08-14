@@ -1,5 +1,6 @@
 const API_BASE_URL = 'https://portfolio-backend-0zx0.onrender.com';
 
+loadedPostings = [];
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
     loadSkills();
@@ -240,6 +241,7 @@ async function loadPostings() {
     try {
         const res = await fetch(`${API_BASE_URL}/api/postings`);
         const postings = await res.json();
+        loadedPostings = postings;
 
         if (postings.length === 0) {
             intro.textContent = 'No open positions right now, check back soon.';
@@ -252,12 +254,17 @@ async function loadPostings() {
       <div class="posting-card">
         <div class="posting-card-title">${escapeHtml(p.title)}</div>
         <p class="posting-card-desc">${escapeHtml(p.purpose)}</p>
-        <button class="btn-primary" onclick='selectPosting(${JSON.stringify(p)})'>Apply</button>
+        <button class="btn-primary" onclick="selectPostingById('${p.id}')">Apply</button>
       </div>
     `).join('');
     } catch (err) {
         intro.textContent = "Couldn't load open positions right now.";
     }
+}
+
+function selectPostingById(id) {
+    const posting = loadedPostings.find(p => p.id === id);
+    if (posting) selectPosting(posting);
 }
 
 function selectPosting(posting) {
