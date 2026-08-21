@@ -10,7 +10,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +56,7 @@ public class EmailService {
         sendViaResend(payload);
     }
 
-    public void sendApplicationNotification(JobApplication application, byte[] cvBytes, String cvFileName) throws Exception {
+    public void sendApplicationNotification(JobApplication application) throws Exception {
         StringBuilder responsesText = new StringBuilder();
         if (application.getResponses() != null) {
             application.getResponses().forEach((label, value) ->
@@ -71,6 +70,7 @@ public class EmailService {
                         "Applicant Name:  " + application.getApplicantName() + "\n" +
                         "Applicant Email: " + application.getApplicantEmail() + "\n\n" +
                         responsesText +
+                        "\nCV / Resume: " + application.getCvUrl() + "\n" +
                         "\n─────────────────────────────────────────\n" +
                         "Sent from IP: " + application.getIpAddress() + "\n" +
                         "Reply directly to this email to respond to " + application.getApplicantName() + ".";
@@ -81,13 +81,6 @@ public class EmailService {
         payload.put("reply_to", application.getApplicantEmail());
         payload.put("subject", "📋 New application: " + application.getPostingTitle() + " — " + application.getApplicantName());
         payload.put("text", body);
-
-        if (cvBytes != null && cvFileName != null) {
-            Map<String, Object> attachment = new HashMap<>();
-            attachment.put("filename", cvFileName);
-            attachment.put("content", Base64.getEncoder().encodeToString(cvBytes));
-            payload.put("attachments", List.of(attachment));
-        }
 
         sendViaResend(payload);
     }

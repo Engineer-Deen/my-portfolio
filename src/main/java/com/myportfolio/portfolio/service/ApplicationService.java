@@ -1,5 +1,7 @@
 package com.myportfolio.portfolio.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
@@ -10,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -19,10 +22,12 @@ public class ApplicationService {
 
     private final Firestore firestore;
     private final EmailService emailService;
+    private final Cloudinary cloudinary;
 
-    public ApplicationService(Firestore firestore, EmailService emailService) {
+    public ApplicationService(Firestore firestore, EmailService emailService, Cloudinary cloudinary) {
         this.firestore = firestore;
         this.emailService = emailService;
+        this.cloudinary = cloudinary;
     }
 
     public void saveApplication(JobApplication application, MultipartFile cv, String ipAddress)
@@ -38,14 +43,28 @@ public class ApplicationService {
             throw new IllegalArgumentException("CV file is too large. Please use a file under 2MB.");
         }
 
+        String cvUrl;
+        try {
+            @SuppressWarnings("rawtypes")
+            Map uploadResult = cloudinary.uploader().upload(cv.getBytes(), ObjectUtils.asMap(
+                    "resource_type", "raw",
+                    "folder", "job_applications",
+                    "public_id", System.currentTimeMillis() + "_" + cv.getOriginalFilename()
+            ));
+            cvUrl = (String) uploadResult.get("secure_url");
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Failed to upload CV. Please try again.");
+        }
+
         application.setIpAddress(ipAddress);
         application.setCreatedAt(Timestamp.now());
         application.setCvFileName(cv.getOriginalFilename());
+        application.setCvUrl(cvUrl);
 
         firestore.collection("job_applications").add(application).get();
 
         try {
-            emailService.sendApplicationNotification(application, cv.getBytes(), cv.getOriginalFilename());
+            emailService.sendApplicationNotification(application);
         } catch (Exception e) {
             System.err.println("Failed to send application notification email: " + e.getMessage());
         }

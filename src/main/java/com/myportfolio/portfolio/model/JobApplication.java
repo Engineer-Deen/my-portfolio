@@ -29,6 +29,9 @@ public class JobApplication {
     @PropertyName("cv_file_name")
     private String cvFileName;
 
+    @PropertyName("cv_url")
+    private String cvUrl;
+
     @PropertyName("ip_address")
     private String ipAddress;
 
