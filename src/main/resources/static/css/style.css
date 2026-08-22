@@ -1386,3 +1386,56 @@ footer {
         text-align: center;
     }
 }
+
+.support-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.support-modal-overlay.open {
+    display: flex;
+}
+.support-modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 360px;
+    text-align: center;
+}
+
+.support-modal-box h3 {
+    font-family: var(--display);
+    color: var(--white);
+    margin-bottom: 0.6rem;
+}
+
+.support-modal-box p {
+    font-size: 0.85rem;
+    color: var(--text2);
+    margin-bottom: 1.2rem;
+}
+.support-modal-box input {
+    width: 100%; padding: 0.8rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text); border-radius: 6px;
+    margin-bottom: 1.2rem;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.support-modal-actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.support-modal-actions button {
+    flex: 1;
+}

@@ -281,6 +281,18 @@
     <div class="footer-copy">© <span id="footerYear"></span> <span>Abdul Deen Kamara</span> &nbsp;·&nbsp; Built with purpose, secured by design</div>
 </footer>
 
+<div class="support-modal-overlay" id="supportModalOverlay">
+    <div class="support-modal-box">
+        <h3>Support My Work</h3>
+        <p>Enter the amount you'd like to contribute (SLE).</p>
+            <input type="number" id="supportAmountInput" min="1" placeholder="e.g. 50">
+        <div class="support-modal-actions">
+            <button class="btn-secondary" id="supportModalCancel">Cancel</button>
+            <button class="btn-primary" id="supportModalConfirm">Continue to Payment</button>
+        </div> <p id="supportModalError" class="form-error" style="display:none;"></p>
+    </div>
+</div>
+
 <script src="js/app.js"></script>
 </body>
 </html>

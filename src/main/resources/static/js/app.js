@@ -105,21 +105,59 @@ async function loadResearch() {
 
 function wireSupportButtons() {
     const ids = ['navSupportBtn', 'mobileSupportBtn', 'heroSupportBtn', 'supportCardBtn'];
+    const overlay = document.getElementById('supportModalOverlay');
+    const amountInput = document.getElementById('supportAmountInput');
+    const errorEl = document.getElementById('supportModalError');
+
     ids.forEach(id => {
         const btn = document.getElementById(id);
         if (!btn) return;
-        btn.addEventListener('click', async (e) => {
+        btn.addEventListener('click', (e) => {
             e.preventDefault();
-            try {
-                const res = await fetch(`${API_BASE_URL}/api/support/redirect`);
-                const data = await res.json();
-                if (data.url && data.url !== '#') {
-                    window.location.href = data.url;
-                }
-            } catch (err) {
-                console.error('Support redirect failed', err);
-            }
+            errorEl.style.display = 'none';
+            amountInput.value = '';
+            overlay.classList.add('open');
         });
+    });
+
+    document.getElementById('supportModalCancel').addEventListener('click', () => {
+        overlay.classList.remove('open');
+    });
+
+    document.getElementById('supportModalConfirm').addEventListener('click', async () => {
+        const amount = parseInt(amountInput.value, 10);
+
+        if (!amount || amount < 1) {
+            errorEl.textContent = 'Please enter a valid amount.';
+            errorEl.style.display = 'block';
+            return;
+        }
+
+        const confirmBtn = document.getElementById('supportModalConfirm');
+        confirmBtn.textContent = 'Processing...';
+        confirmBtn.disabled = true;
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/support/checkout`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount }),
+            });
+            const data = await res.json();
+
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                errorEl.textContent = data.error || 'Something went wrong. Please try again.';
+                errorEl.style.display = 'block';
+            }
+        } catch (err) {
+            errorEl.textContent = 'Network error. Please try again.';
+            errorEl.style.display = 'block';
+        }
+
+        confirmBtn.textContent = 'Continue to Payment';
+        confirmBtn.disabled = false;
     });
 }
 
