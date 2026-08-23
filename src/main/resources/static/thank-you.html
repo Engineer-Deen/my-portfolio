@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You — Abdul Deen Kamara</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        :root {
+            --success: #22c55e;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .thankyou-glow {
+            position: fixed;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(34, 197, 94, 0.12) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: pulse 6s ease-in-out infinite;
+        }
+
+        .particle {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .thankyou-card {
+            position: relative;
+            z-index: 2;
+            max-width: 480px;
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 16px;
+            padding: 3.5rem 2.5rem;
+        }
+
+        .system-label {
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            color: var(--success);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .system-label::before,
+        .system-label::after {
+            content: '';
+            width: 24px;
+            height: 1px;
+            background: rgba(34, 197, 94, 0.4);
+        }
+
+        .checkmark-wrap {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
+        }
+
+        .checkmark-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid var(--success);
+            animation: ring-pulse 1.8s ease-out infinite;
+        }
+
+        .checkmark-circle {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .checkmark-circle svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .checkmark-circle circle {
+            fill: rgba(34, 197, 94, 0.06);
+            stroke: var(--success);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 220;
+            stroke-dashoffset: 220;
+            animation: draw-circle 0.6s ease forwards;
+        }
+
+        .checkmark-circle path {
+            fill: none;
+            stroke: var(--success);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 40;
+            stroke-dashoffset: 40;
+            animation: draw-check 0.4s 0.5s ease forwards;
+        }
+
+        @keyframes draw-circle {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes draw-check {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes ring-pulse {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .thankyou-title {
+            font-family: var(--display);
+            font-size: clamp(1.9rem, 5vw, 2.6rem);
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 1rem;
+            animation: fadeUp 0.6s 0.3s ease both;
+        }
+
+        .thankyou-title .accent {
+            color: var(--success);
+        }
+
+        .thankyou-message {
+            font-size: 0.95rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            animation: fadeUp 0.6s 0.4s ease both;
+        }
+
+        .receipt-line {
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            color: var(--text3);
+            letter-spacing: 0.08em;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 2rem;
+            animation: fadeUp 0.6s 0.45s ease both;
+        }
+
+        .thankyou-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeUp 0.6s 0.5s ease both;
+        }
+    </style>
+</head>
+<body>
+
+<div class="thankyou-glow"></div>
+<div id="particles"></div>
+
+<div class="thankyou-card">
+    <div class="system-label">Transaction Confirmed</div>
+
+    <div class="checkmark-wrap">
+        <div class="checkmark-ring"></div>
+        <div class="checkmark-circle">
+            <svg viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="35"></circle>
+                <path d="M25 41 L35 51 L56 28"></path>
+            </svg>
+        </div>
+    </div>
+
+    <h1 class="thankyou-title">Thank <span class="accent">You</span></h1>
+    <p class="thankyou-message">Your payment went through successfully. Support like this directly funds the tools, research, and time that go into building secure systems.</p>
+
+    <div class="receipt-line">$ payment_status: confirmed &nbsp;·&nbsp; processed_by: Monime</div>
+
+    <div class="thankyou-actions">
+        <a href="/" class="btn-primary">Back to Portfolio</a>
+        <a href="/#contact" class="btn-secondary">Get In Touch</a>
+    </div>
+</div>
+
+<script>
+    const colors = ['#22c55e', '#38bdf8', '#f5a623'];
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 14; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 4 + 2;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.top = Math.random() * 100 + 'vh';
+        p.style.animation = `float ${6 + Math.random() * 6}s ease-in-out infinite`;
+        p.style.animationDelay = Math.random() * 4 + 's';
+        container.appendChild(p);
+    }
+
+    const styleTag = document.createElement('style');
+    styleTag.textContent = `
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-30px); }
+      }
+    `;
+    document.head.appendChild(styleTag);
+</script>
+
+</body>
+</html>

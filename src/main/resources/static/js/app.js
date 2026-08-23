@@ -11,7 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
     wireActiveNavHighlight();
     setFooterYear();
     loadHeroPhoto();
-    loadPostings(); });
+    loadPostings();
+    fixHashScrollOnLoad();
+
+});
 
 async function loadProjects() {
     const grid = document.getElementById('projectsGrid');
@@ -270,6 +273,15 @@ function escapeHtml(str) {
     div.textContent = str;
     return div.innerHTML;
 }
+
+function fixHashScrollOnLoad() {
+    if (!window.location.hash)
+        return;
+    setTimeout(() => {
+        const target = document.querySelector(window.location.hash);
+        if (target) target.scrollIntoView({
+            behavior: 'smooth', block: 'start' });
+        }, 700); }
 
 
 async function loadPostings() {

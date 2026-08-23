@@ -46,7 +46,7 @@ public class MonimeService {
         Map<String, Object> payload = Map.of(
                 "name", "Support Payment",
                 "lineItems", List.of(lineItem),
-                "successUrl", siteBaseUrl + "/?payment=success#support",
+                "successUrl", siteBaseUrl + "/thank-you.html",
                 "cancelUrl", siteBaseUrl + "/?payment=cancelled#support"
         );
 
