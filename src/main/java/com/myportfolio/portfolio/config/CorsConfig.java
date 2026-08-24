@@ -15,14 +15,23 @@ public class CorsConfig {
 
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilter() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("https://*.vercel.app", "http://localhost:*"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(false);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
+
+        // Webhook endpoint: no origin restriction — Monime's servers call this directly,
+        // and the real protection here is HMAC signature verification, not CORS.
+        CorsConfiguration webhookConfig = new CorsConfiguration();
+        webhookConfig.setAllowedOriginPatterns(List.of("*"));
+        webhookConfig.setAllowedMethods(List.of("POST", "OPTIONS"));
+        webhookConfig.setAllowedHeaders(List.of("*"));
+        source.registerCorsConfiguration("/api/support/webhook", webhookConfig);
+
+        // Everything else: restricted to your actual frontend domains, as before.
+        CorsConfiguration generalConfig = new CorsConfiguration();
+        generalConfig.setAllowedOriginPatterns(List.of("https://*.vercel.app", "http://localhost:*"));
+        generalConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        generalConfig.setAllowedHeaders(List.of("*"));
+        generalConfig.setAllowCredentials(false);
+        source.registerCorsConfiguration("/api/**", generalConfig);
 
         FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>(new CorsFilter(source));
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
