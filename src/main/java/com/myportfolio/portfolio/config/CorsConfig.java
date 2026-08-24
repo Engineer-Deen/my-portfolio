@@ -24,6 +24,7 @@ public class CorsConfig {
         webhookConfig.setAllowedMethods(List.of("POST", "OPTIONS"));
         webhookConfig.setAllowedHeaders(List.of("*"));
         source.registerCorsConfiguration("/api/support/webhook", webhookConfig);
+        source.registerCorsConfiguration("/api/support/success", webhookConfig);
 
         // Everything else: restricted to your actual frontend domains, as before.
         CorsConfiguration generalConfig = new CorsConfiguration();
